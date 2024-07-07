@@ -4,25 +4,32 @@ import random
 
 # function that reset the game
 def reset():
-    global buttons, size, player_current, number_of_tiles
+    global buttons, size, player_current, number_of_tiles, pixelsize, frame, settings_button, reset_button, label, players
+    # destroys the old buttons
+    for i in range(size):
+        for j in range(size):
+            buttons[i][j].destroy()
     # addapts the changes to the number of buttons
-    buttons =[]
     for i in range(size):
         buttons.append([])
         for j in range(size):
             buttons[i].append([])
+            print(buttons[i][j])
+            
+
     create_buttons(size)
-    # resets the buttons to active state and empty text
+
+    # resets the buttons to active state and empty text and change their size
     try:
         for i in range(size):
             for j in range(size):
                 buttons[i][j]['text'] = ""
                 buttons[i][j]['state'] = "active"
+                buttons[i][j].config(width=int(pixelsize), height=int(pixelsize/2))
     except TypeError:
         pass
 
     # resets the global variables
-    global player_current, number_of_tiles
     player_current = random.choice(players)
     number_of_tiles = size*size
     label['text'] = "Player "+ player_current +" turn"
@@ -31,15 +38,19 @@ def reset():
     label.config(font=("Helvetica", window.winfo_height()//size//4))
     reset_button.config(width=int(window.winfo_width()/size/10), height=int(window.winfo_height()/size/10/4))
     settings_button.config(width=int(window.winfo_width()/size/10), height=int(window.winfo_height()/size/10/4))
+    # changes the dimensions of the frame to accomodate the new button size
+    frame.config(width=size*pixelsize, height=size*pixelsize/2)
 
 # function that stops the game(disables the buttons)
 def stop():
+    global buttons, size
     for i in range(size):
         for j in range(size):
             buttons[i][j]['state'] = "disabled"
 
 # function that checks if someone has won, checks all 8 directions, currently there is no way to change the number of tiles needed to win, will be added in the future
 def check_for_win(x, y):
+    global player_current, size, buttons, label
     # check for 8 directional wins
     if buttons[x][y]['text'] == player_current:
         # check for horizontal win
@@ -76,16 +87,16 @@ def check_for_win(x, y):
 
 # function that changes the ownership of a button/tile
 def change_ownership(x, y):
-    global player_current, number_of_tiles
+    global player_current, number_of_tiles, players
     if buttons[x][y]['text'] == "":
         buttons[x][y]['text'] = player_current
         if check_for_win(x, y):
             stop()
         else:
-            if player_current == "X":
-                player_current = "O"
+            if player_current == players[0]:
+                player_current = players[1]
             else:
-                player_current = "X"
+                player_current = players[0]
             number_of_tiles -= 1
     else:
         print("This tile is already taken")
@@ -95,11 +106,11 @@ def change_ownership(x, y):
 
 # function that applies the settings
 def apply_settings(size_entry, tiles_size_entry, winning_tiles_entry, resizable_option):
-    global size, pixelsize, winning_tiles
+    global size, pixelsize, winning_tiles, resizable
     # try to aplly the settings
     try:
         # checks if the values are valid
-        if int(winning_tiles_entry) <= 2 or int(winning_tiles_entry) > int(size_entry) or int(size_entry) < 3 or int(size_entry) > 10 or int(tiles_size_entry) < 30 or int(tiles_size_entry) > 200:
+        if int(winning_tiles_entry) <= 2 or int(winning_tiles_entry) > int(size_entry) or int(size_entry) < 3 or int(size_entry) > 15 or int(tiles_size_entry) < 2 or int(tiles_size_entry) > 25:
             print("Invalid")
             return
         else:
@@ -109,6 +120,8 @@ def apply_settings(size_entry, tiles_size_entry, winning_tiles_entry, resizable_
             winning_tiles = int(winning_tiles_entry)
             # changes the window settings
             window.resizable(resizable_option, resizable_option)
+            if resizable_option == 0:
+                resizable = 0
             # resets the game to apply the changes
             reset()
     except:
@@ -167,17 +180,17 @@ def settings_window():
 
 # function that creates the buttons
 def create_buttons(size):
-    global buttons
+    global buttons, pixelsize, frame
     for i in range(size):
         for j in range(size):
-            buttons[i][j] = tkinter.Button(frame, text="", width=(size*2)*3, height=size*3, command=lambda row = i, collum = j: change_ownership(row,collum))
+            buttons[i][j] = tkinter.Button(frame, text="", width=int(pixelsize), height=int(pixelsize/2), command=lambda row = i, collum = j: change_ownership(row,collum))
             buttons[i][j].grid(row=i, column=j)
 
 
 # variables
 
 # size of the tiles
-pixelsize = 100
+pixelsize = 22
 # size of the board
 size = 3
 # number of tiles needed to win
@@ -212,7 +225,7 @@ label.pack(side="top")
 
 
 # create a frame for the buttons
-frame = tkinter.Frame(window)
+frame = tkinter.Frame(window, width=size*pixelsize, height=size*pixelsize/2)
 frame.pack(side="top")
 
 # Create buttons is now in a function, this is because of the settings window
