@@ -4,11 +4,22 @@ import random
 
 # function that reset the game
 def reset():
-    # resets the buttons to active state and empty text
+    global buttons, size, player_current, number_of_tiles
+    # addapts the changes to the number of buttons
+    buttons =[]
     for i in range(size):
+        buttons.append([])
         for j in range(size):
-            buttons[i][j]['text'] = ""
-            buttons[i][j]['state'] = "active"
+            buttons[i].append([])
+    create_buttons(size)
+    # resets the buttons to active state and empty text
+    try:
+        for i in range(size):
+            for j in range(size):
+                buttons[i][j]['text'] = ""
+                buttons[i][j]['state'] = "active"
+    except TypeError:
+        pass
 
     # resets the global variables
     global player_current, number_of_tiles
@@ -81,10 +92,86 @@ def change_ownership(x, y):
     if number_of_tiles == 0:
         label['text'] = "Draw"
 
+
+# function that applies the settings
+def apply_settings(size_entry, tiles_size_entry, winning_tiles_entry, resizable_option):
+    global size, pixelsize, winning_tiles
+    # try to aplly the settings
+    try:
+        # checks if the values are valid
+        if int(winning_tiles_entry) <= 2 or int(winning_tiles_entry) > int(size_entry) or int(size_entry) < 3 or int(size_entry) > 10 or int(tiles_size_entry) < 30 or int(tiles_size_entry) > 200:
+            print("Invalid")
+            return
+        else:
+            # changes the values of the global variables
+            size = int(size_entry)
+            pixelsize = int(tiles_size_entry)
+            winning_tiles = int(winning_tiles_entry)
+            # changes the window settings
+            window.resizable(resizable_option, resizable_option)
+            # resets the game to apply the changes
+            reset()
+    except:
+        pass
+
+
+
+
 # function that creates a settings window
 def settings_window():
-    pass
+    global size, pixelsize, winning_tiles, resizable
+    # the settings window and the title, geometry, and icon
+    settings = tkinter.Toplevel(window)
+    settings.title("Settings")
+    settings.geometry("300x300")
+    settings.resizable(False, False)
+    settings.iconbitmap("icon.ico")
+    # main label
+    settings_label = tkinter.Label(settings, text="Settings", font=("Helvetica", 20))
+    settings_label.pack(side="top")
+    # the frame for the settings
+    settings_frame = tkinter.Frame(settings)
+    settings_frame.pack(side="top")
+    # size of the board label and entry
+    size_label = tkinter.Label(settings_frame, text="Size of the board: ")
+    size_label.grid(row=0, column=0)
+    e1 = tkinter.StringVar()
+    e1.set(size)
+    size_entry = tkinter.Entry(settings_frame, textvariable=e1)
+    size_entry.grid(row=0, column=1)
+    # size of the tiles label and entry
+    tiles_size_label = tkinter.Label(settings_frame, text="Size of the tiles: ")
+    tiles_size_label.grid(row=1, column=0)
+    e2 = tkinter.StringVar()
+    e2.set(pixelsize)
+    tiles_size_entry = tkinter.Entry(settings_frame, textvariable=e2)
+    tiles_size_entry.grid(row=1, column=1)
+    # tiles needed to win label and entry
+    winning_tiles_label = tkinter.Label(settings_frame, text="Tiles needed to win: ")
+    winning_tiles_label.grid(row=2, column=0)
+    e3 = tkinter.StringVar()
+    e3.set(winning_tiles)
+    winning_tiles_entry = tkinter.Entry(settings_frame, textvariable=e3)
+    winning_tiles_entry.grid(row=2, column=1)
+    # resizable window option
+    var = tkinter.IntVar()
+    var.set(resizable)
+    resizable_label = tkinter.Label(settings_frame, text="Resizable window: ")
+    resizable_label.grid(row=3, column=0)
+    resizable_option = tkinter.Checkbutton(settings_frame, variable=var)
+    resizable_option.grid(row=3, column=1)
 
+    # apply button
+    apply_button = tkinter.Button(settings, text="Apply", command=lambda: apply_settings(size_entry.get(), tiles_size_entry.get(), winning_tiles_entry.get(), var.get()))
+    apply_button.pack(side="bottom")
+
+# function that creates the buttons
+def create_buttons(size):
+    global buttons
+    for i in range(size):
+        for j in range(size):
+            buttons[i][j] = tkinter.Button(frame, text="", width=(size*2)*3, height=size*3, command=lambda row = i, collum = j: change_ownership(row,collum))
+            buttons[i][j].grid(row=i, column=j)
 
 
 # variables
@@ -94,7 +181,7 @@ pixelsize = 100
 # size of the board
 size = 3
 # number of tiles needed to win
-#winning_tiles = 3
+winning_tiles = 3
 # number of tiles in the board
 number_of_tiles = size*size
 # list of events
@@ -103,7 +190,7 @@ events = []
 # create the window variables, and the all the global variables
 windowheight = int(pixelsize * size)
 windowwidth = int(pixelsize * size)
-players = ["X", "O"]
+players = ["1", "0"]
 player_current = random.choice(players)
 buttons =[]
 for i in range(size):
@@ -116,6 +203,7 @@ window = tkinter.Tk()
 window.title("Tic Tac Toe")
 window.geometry("1200x700")
 window.resizable(True, True)
+resizable = 1
 window.iconbitmap("icon.ico")
 
 # create the top label
@@ -127,11 +215,9 @@ label.pack(side="top")
 frame = tkinter.Frame(window)
 frame.pack(side="top")
 
-# Create buttons, and place them in the window on a grid
-for i in range(size):
-    for j in range(size):
-        buttons[i][j] = tkinter.Button(frame, text="", width=(size*2)*3, height=size*3, command=lambda row = i, collum = j: change_ownership(row,collum))
-        buttons[i][j].grid(row=i, column=j)
+# Create buttons is now in a function, this is because of the settings window
+create_buttons(size)
+
 
 # creating a frame for the special buttons
 game_buttons = tkinter.Frame(window)
