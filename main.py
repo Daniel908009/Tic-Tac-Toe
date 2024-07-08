@@ -70,85 +70,55 @@ def stop():
         for j in range(size):
             buttons[i][j]['state'] = "disabled"
 
-# function that checks if someone has won, checks all 8 directions, works for any size of the board, this function needs to check every button every time a button is pressed, this is not optimal, but it works
-def check_for_win(x, y):
-    global player_current, buttons, label, winning_tiles#, size
-    # check for 8 directional wins
-    if buttons[x][y]['text'] == player_current:
-        # check for horizontal win
-        for i in range(winning_tiles):
-            if buttons[x][i]['text'] != player_current:
-                break
-            if i == winning_tiles-1:
-                label['text'] = "Player " + player_current + " wins"
-                return True
-        # check for vertical win
-        for i in range(winning_tiles):
-            if buttons[i][y]['text'] != player_current:
-                break
-            if i == winning_tiles-1:
-                label['text'] = "Player " + player_current + " wins"
-                return True
-        # check for diagonal win (top left to bottom right) and anti diagonal win (top right to bottom left), this works for any size of the board because it checks the whole board
-        if x == y:
-            for i in range(winning_tiles):
-                if buttons[i][i]['text'] != player_current:
-                    break
-                if i == winning_tiles-1:
-                    label['text'] = "Player " + player_current + " wins"
-                    return True
-        if x + y == size - 1:
-            for i in range(winning_tiles):
-                if buttons[i][size-1-i]['text'] != player_current:
-                    break
-                if i == winning_tiles-1:
-                    label['text'] = "Player " + player_current + " wins"
-                    return True
-
+# function that checks if someone has won, checks all 8 directions, 
+# works for any size of the board, 
+# this function needs to check every button every time a button is pressed, this is not optimal, but it works
+# the function checks the surrounding buttons of the button that was pressed, and if they are the same as the button that was pressed, it checks the next one, and so on
+def check_for_win():
+    global player_current, buttons, label, winning_tiles, size
+    for i in range(size):
+        for j in range(size):
+            if buttons[i][j]['text'] == player_current:
+                # check for horizontal win
+                for k in range(winning_tiles):
+                    if j + k < size:
+                        if buttons[i][j+k]['text'] != player_current:
+                            break
+                        if k == winning_tiles-1:
+                            label['text'] = "Player " + player_current + " wins"
+                            return True
+                # check for vertical win
+                for k in range(winning_tiles):
+                    if i + k < size:
+                        if buttons[i+k][j]['text'] != player_current:
+                            break
+                        if k == winning_tiles-1:
+                            label['text'] = "Player " + player_current + " wins"
+                            return True
+                # check for diagonal win
+                for k in range(winning_tiles):
+                    if i + k < size and j + k < size:
+                        if buttons[i+k][j+k]['text'] != player_current:
+                            break
+                        if k == winning_tiles-1:
+                            label['text'] = "Player " + player_current + " wins"
+                            return True
+                # check for anti diagonal win
+                for k in range(winning_tiles):
+                    if i + k < size and j - k >= 0:
+                        if buttons[i+k][j-k]['text'] != player_current:
+                            break
+                        if k == winning_tiles-1:
+                            label['text'] = "Player " + player_current + " wins"
+                            return True
     return False
-   
-
-#    global player_current, buttons, label, winning_tiles
-#    # check for 8 directional wins
-#    if buttons[x][y]['text'] == player_current:
-#        # check for horizontal win
-#        for i in range(winning_tiles):
-#            if buttons[x][i]['text'] != player_current:
-#                break
-#            if i == winning_tiles-1:
-#                label['text'] = "Player " + player_current + " wins"
-#                return True
-        # check for vertical win
-#        for i in range(winning_tiles):
-#            if buttons[i][y]['text'] != player_current:
-#                break
-#            if i == winning_tiles-1:
-#                label['text'] = "Player " + player_current + " wins"
-#                return True
-        # check for diagonal win
-#        if x == y:
-#            for i in range(winning_tiles):
-#                if buttons[i][i]['text'] != player_current:
-#                    break
-#                if i == winning_tiles-1:
-#                    label['text'] = "Player " + player_current + " wins"
-#                    return True
-        # check for anti diagonal win
-#        if x + y == size - 1:
-#            for i in range(winning_tiles):
-#                if buttons[i][size-1-i]['text'] != player_current:
-#                    break
-#                if i == winning_tiles-1:
-#                    label['text'] = "Player " + player_current + " wins"
-#                    return True
-#    return False
 
 # function that changes the ownership of a button/tile
 def change_ownership(x, y):
     global player_current, number_of_tiles, players
     if buttons[x][y]['text'] == "":
         buttons[x][y]['text'] = player_current
-        if check_for_win(x, y):
+        if check_for_win():
             stop()
         else:
             if player_current == players[0]:
@@ -156,6 +126,7 @@ def change_ownership(x, y):
             else:
                 player_current = players[0]
             number_of_tiles -= 1
+            label['text'] = "Player "+ player_current +" turn"
     else:
         print("This tile is already taken")
     if number_of_tiles == 0:
@@ -169,7 +140,6 @@ def apply_settings(size_entry, winning_tiles_entry, resizable_option):
     try:
         # checks if the values are valid
         if int(winning_tiles_entry) <= 2 or int(winning_tiles_entry) > int(size_entry) or int(size_entry) < 3 or int(size_entry) > 15 :
-            print("Invalid")
             return
         else:
             # changes the values of the global variables
@@ -194,7 +164,7 @@ def settings_window():
     # the settings window and the title, geometry, and icon
     settings = tkinter.Toplevel(window)
     settings.title("Settings")
-    settings.geometry("300x300")
+    settings.geometry("400x300")
     settings.resizable(False, False)
     settings.iconbitmap("icon.ico")
     # main label
@@ -210,6 +180,8 @@ def settings_window():
     e1.set(size)
     size_entry = tkinter.Entry(settings_frame, textvariable=e1)
     size_entry.grid(row=0, column=1)
+    recomended_size_label = tkinter.Label(settings_frame, text="Range is: 3-15")
+    recomended_size_label.grid(row=0, column=2)
     # size of the tiles label and entry
     #tiles_size_label = tkinter.Label(settings_frame, text="Size of the tiles: ")
     #tiles_size_label.grid(row=1, column=0)
@@ -224,6 +196,8 @@ def settings_window():
     e3.set(winning_tiles)
     winning_tiles_entry = tkinter.Entry(settings_frame, textvariable=e3)
     winning_tiles_entry.grid(row=2, column=1)
+    recomended_winning_tiles_label = tkinter.Label(settings_frame, text="Range is: 3-15")
+    recomended_winning_tiles_label.grid(row=2, column=2)
     # resizable window option
     var = tkinter.IntVar()
     var.set(resizable)
@@ -231,10 +205,13 @@ def settings_window():
     resizable_label.grid(row=3, column=0)
     resizable_option = tkinter.Checkbutton(settings_frame, variable=var)
     resizable_option.grid(row=3, column=1)
-
     # apply button
     apply_button = tkinter.Button(settings, text="Apply", command=lambda: apply_settings(size_entry.get(), winning_tiles_entry.get(), var.get()))
     apply_button.pack(side="bottom")
+    # note label
+    note_label = tkinter.Label(settings, text="Note: The changes will be applied only if they are within the specified range")
+    note_label.pack(side="bottom")
+
 
 # function that creates the buttons
 def create_buttons(size):
@@ -283,7 +260,7 @@ resizable = 1
 window.iconbitmap("icon.ico")
 
 # create the top label
-label = tkinter.Label(window, text="Players: "+ player_current +" turn", font=("Helvetica", window.winfo_height()//size//4))
+label = tkinter.Label(window, text="Player: "+ player_current +" turn", font=("Helvetica", window.winfo_height()//size//4))
 label.pack(side="top")
 
 
