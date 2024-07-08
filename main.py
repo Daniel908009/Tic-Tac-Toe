@@ -70,42 +70,78 @@ def stop():
         for j in range(size):
             buttons[i][j]['state'] = "disabled"
 
-# function that checks if someone has won, checks all 8 directions, currently there is no way to change the number of tiles needed to win, will be added in the future
+# function that checks if someone has won, checks all 8 directions, works for any size of the board, this function needs to check every button every time a button is pressed, this is not optimal, but it works
 def check_for_win(x, y):
-    global player_current, size, buttons, label
+    global player_current, buttons, label, winning_tiles#, size
     # check for 8 directional wins
     if buttons[x][y]['text'] == player_current:
         # check for horizontal win
-        for i in range(size):
+        for i in range(winning_tiles):
             if buttons[x][i]['text'] != player_current:
                 break
-            if i == size-1:
+            if i == winning_tiles-1:
                 label['text'] = "Player " + player_current + " wins"
                 return True
         # check for vertical win
-        for i in range(size):
+        for i in range(winning_tiles):
             if buttons[i][y]['text'] != player_current:
                 break
-            if i == size-1:
+            if i == winning_tiles-1:
                 label['text'] = "Player " + player_current + " wins"
                 return True
-        # check for diagonal win
+        # check for diagonal win (top left to bottom right) and anti diagonal win (top right to bottom left), this works for any size of the board because it checks the whole board
         if x == y:
-            for i in range(size):
+            for i in range(winning_tiles):
                 if buttons[i][i]['text'] != player_current:
                     break
-                if i == size-1:
+                if i == winning_tiles-1:
                     label['text'] = "Player " + player_current + " wins"
                     return True
-        # check for anti diagonal win
         if x + y == size - 1:
-            for i in range(size):
-                if buttons[i][(size-1)-i]['text'] != player_current:
+            for i in range(winning_tiles):
+                if buttons[i][size-1-i]['text'] != player_current:
                     break
-                if i == size-1:
+                if i == winning_tiles-1:
                     label['text'] = "Player " + player_current + " wins"
                     return True
+
     return False
+   
+
+#    global player_current, buttons, label, winning_tiles
+#    # check for 8 directional wins
+#    if buttons[x][y]['text'] == player_current:
+#        # check for horizontal win
+#        for i in range(winning_tiles):
+#            if buttons[x][i]['text'] != player_current:
+#                break
+#            if i == winning_tiles-1:
+#                label['text'] = "Player " + player_current + " wins"
+#                return True
+        # check for vertical win
+#        for i in range(winning_tiles):
+#            if buttons[i][y]['text'] != player_current:
+#                break
+#            if i == winning_tiles-1:
+#                label['text'] = "Player " + player_current + " wins"
+#                return True
+        # check for diagonal win
+#        if x == y:
+#            for i in range(winning_tiles):
+#                if buttons[i][i]['text'] != player_current:
+#                    break
+#                if i == winning_tiles-1:
+#                    label['text'] = "Player " + player_current + " wins"
+#                    return True
+        # check for anti diagonal win
+#        if x + y == size - 1:
+#            for i in range(winning_tiles):
+#                if buttons[i][size-1-i]['text'] != player_current:
+#                    break
+#                if i == winning_tiles-1:
+#                    label['text'] = "Player " + player_current + " wins"
+#                    return True
+#    return False
 
 # function that changes the ownership of a button/tile
 def change_ownership(x, y):
