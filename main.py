@@ -5,27 +5,49 @@ import random
 # function that reset the game
 def reset():
     global buttons, size, player_current, number_of_tiles, pixelsize, frame, settings_button, reset_button, label, players
-    # destroys the old buttons
-    for i in range(size):
-        for j in range(size):
-            buttons[i][j].destroy()
+    #buttons.clear()
+    # destroys the old buttons from the frame in window in order to create new ones
+    for widget in frame.winfo_children():
+        widget.destroy()
+#    print(oldsize)
+#    print(pixelsize)
+#    if pixelsize != oldsize:
+#    for i in range(size):
+#        for j in range(size):
+#            print("destroying")
+#            print(buttons[i][j])
+#            buttons[i][j].destroy()
+#            print(buttons[i][j])
+#            print("destroyed")
+    buttons.clear()
     # addapts the changes to the number of buttons
     for i in range(size):
         buttons.append([])
         for j in range(size):
             buttons[i].append([])
-            print(buttons[i][j])
+            #print(buttons[i][j])
             
-
+    #print(size)
+    # creates the new buttons
     create_buttons(size)
 
     # resets the buttons to active state and empty text and change their size
+    # with and height of the buttons is determined by a percalage of the window size
+    buttons_width = window.winfo_height()/size/10
+    buttons_height = buttons_width/2
+    # the font size is determined by the size of a button
+    #buttons_font = buttons_width//2
+    #print(window.winfo_height())
+    #print(window.winfo_width())
+    #print(buttons_width)
+    #print(buttons_height)
+
     try:
         for i in range(size):
             for j in range(size):
                 buttons[i][j]['text'] = ""
                 buttons[i][j]['state'] = "active"
-                buttons[i][j].config(width=int(pixelsize), height=int(pixelsize/2))
+                buttons[i][j].config(width=int(buttons_width), height=int(buttons_height))
     except TypeError:
         pass
 
@@ -105,18 +127,18 @@ def change_ownership(x, y):
 
 
 # function that applies the settings
-def apply_settings(size_entry, tiles_size_entry, winning_tiles_entry, resizable_option):
+def apply_settings(size_entry, winning_tiles_entry, resizable_option):
     global size, pixelsize, winning_tiles, resizable
     # try to aplly the settings
     try:
         # checks if the values are valid
-        if int(winning_tiles_entry) <= 2 or int(winning_tiles_entry) > int(size_entry) or int(size_entry) < 3 or int(size_entry) > 15 or int(tiles_size_entry) < 2 or int(tiles_size_entry) > 25:
+        if int(winning_tiles_entry) <= 2 or int(winning_tiles_entry) > int(size_entry) or int(size_entry) < 3 or int(size_entry) > 15 :
             print("Invalid")
             return
         else:
             # changes the values of the global variables
             size = int(size_entry)
-            pixelsize = int(tiles_size_entry)
+            #pixelsize = int(tiles_size_entry)
             winning_tiles = int(winning_tiles_entry)
             # changes the window settings
             window.resizable(resizable_option, resizable_option)
@@ -153,12 +175,12 @@ def settings_window():
     size_entry = tkinter.Entry(settings_frame, textvariable=e1)
     size_entry.grid(row=0, column=1)
     # size of the tiles label and entry
-    tiles_size_label = tkinter.Label(settings_frame, text="Size of the tiles: ")
-    tiles_size_label.grid(row=1, column=0)
-    e2 = tkinter.StringVar()
-    e2.set(pixelsize)
-    tiles_size_entry = tkinter.Entry(settings_frame, textvariable=e2)
-    tiles_size_entry.grid(row=1, column=1)
+    #tiles_size_label = tkinter.Label(settings_frame, text="Size of the tiles: ")
+    #tiles_size_label.grid(row=1, column=0)
+    #e2 = tkinter.StringVar()
+    #e2.set(pixelsize)
+    #tiles_size_entry = tkinter.Entry(settings_frame, textvariable=e2)
+    #tiles_size_entry.grid(row=1, column=1)
     # tiles needed to win label and entry
     winning_tiles_label = tkinter.Label(settings_frame, text="Tiles needed to win: ")
     winning_tiles_label.grid(row=2, column=0)
@@ -175,7 +197,7 @@ def settings_window():
     resizable_option.grid(row=3, column=1)
 
     # apply button
-    apply_button = tkinter.Button(settings, text="Apply", command=lambda: apply_settings(size_entry.get(), tiles_size_entry.get(), winning_tiles_entry.get(), var.get()))
+    apply_button = tkinter.Button(settings, text="Apply", command=lambda: apply_settings(size_entry.get(), winning_tiles_entry.get(), var.get()))
     apply_button.pack(side="bottom")
 
 # function that creates the buttons
@@ -185,11 +207,16 @@ def create_buttons(size):
         for j in range(size):
             buttons[i][j] = tkinter.Button(frame, text="", width=int(pixelsize), height=int(pixelsize/2), command=lambda row = i, collum = j: change_ownership(row,collum))
             buttons[i][j].grid(row=i, column=j)
+    #print(buttons)
+    #print(len(buttons))
+    #print(len(buttons[0]))
+    #print(len(buttons[1]))
+    #print(len(buttons[2]))
 
 
 # variables
 
-# size of the tiles
+# initial size of the tiles
 pixelsize = 22
 # size of the board
 size = 3
