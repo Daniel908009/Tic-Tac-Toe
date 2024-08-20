@@ -5,7 +5,7 @@ Game is fully resizable, has a settings menu with options to change the board si
 Players take turns putting their marks in empty squares. <br>
 The first player to get a specific amount of her marks in a row (up, down, across, or diagonally) is the winner. <br>
 When all squares are full, the game is over. <br>
-<h1>Download instuctions</h1>
+<h1>Download instructions</h1>
 *Note the links are instructional images <br>
 <h2>Using graphic UI</h2>
 <h3>Downloading EXE <h3>
