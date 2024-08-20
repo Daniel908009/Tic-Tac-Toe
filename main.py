@@ -1,6 +1,8 @@
 # necessary imports
 import tkinter
 import random
+import os
+import sys
 
 # function that reset the game
 def reset():
@@ -257,7 +259,14 @@ window.title("Tic Tac Toe")
 window.geometry("1200x700")
 window.resizable(True, True)
 resizable = 1
-window.iconbitmap("icon.ico")
+if hasattr(sys, '_MEIPASS'):
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.abspath(".")
+
+# Load the icon file
+icon_path = os.path.join(base_path, 'icon.png')
+window.iconphoto(False, tkinter.PhotoImage(file=icon_path))
 
 # create the top label
 label = tkinter.Label(window, text="Player: "+ player_current +" turn", font=("Helvetica", window.winfo_height()//size//4))
