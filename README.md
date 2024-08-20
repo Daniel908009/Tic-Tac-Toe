@@ -10,14 +10,14 @@ When all squares are full, the game is over. <br>
 <h2>Using graphic UI</h2>
 <h3>Downloading EXE <h3>
 First make sure you have the latest release version selected <br>
-(https://github.com/user-attachments/assets/9cb23ec9-e74b-431a-a88c-47bc8ef74631) <br>
+(https://github.com/user-attachments/assets/d601c3f3-69a3-4e3c-8b86-2f3299d85239)<br>
 Then click on download exe file and wait until it downloads <br>
-(https://github.com/user-attachments/assets/9532e8b1-b456-4c20-b61e-81817413cfe8) <br>
+(https://github.com/user-attachments/assets/e7996bf8-16c4-4c5c-b864-d9b5f4f99e83) <br>
 After its downloaded you can find it through file explorer or the browser it self. <br>
 Enjoy!<br>
 <h3>Downloading source code <h3>
 First click on the code button as shown in the picture bellow, then click the option Download ZIP <br>
-(https://github.com/user-attachments/assets/d9077cd2-4d18-4bfa-a67c-2398d80cf874) <br>
+(https://github.com/user-attachments/assets/8dbe44c5-ad95-4fb3-9135-a765dd3ad9ad) <br>
 After its downloaded you can find it on your computer through file explorer. After you have found it right click it, it should display option called "Extract" <br>
 Click on it and wait a moment. A new directory should appear containing all the files neccesery for the game.<br>
 Now open a console and enter the folowing code: pip install -r /path/to/requirements.txt <br>
@@ -33,3 +33,5 @@ Now open a console and enter the folowing code: pip install -r /path/to/requirem
 *Replace the /path/to/requirements.txt with the actual path. <br>
 Enjoy the game! <br>
 <h1>Screenshots of the game</h1>
+(https://github.com/user-attachments/assets/2d1ad99c-c532-4547-be65-007746456239)
+(https://github.com/user-attachments/assets/5ff3a882-ceaa-416b-b77a-9f4fe89eb327)
