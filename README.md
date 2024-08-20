@@ -29,8 +29,6 @@ Open your command prompt and enter the folowing code without the " letters <br>
 "git clone https://github.com/Daniel908009/Tic-Tac-Toe.git" <br>
 This code adress of the site can also be found if you click the code button inside the github repository UI <br>
 If you dont have git than first enter the folowing command: sudo apt install git <br>
-Now open a console and enter the folowing code: pip install -r /path/to/requirements.txt <br>
-*Replace the /path/to/requirements.txt with the actual path. <br>
 Enjoy the game! <br>
 <h1>Screenshots of the game</h1>
 (https://github.com/user-attachments/assets/2d1ad99c-c532-4547-be65-007746456239) <br>
