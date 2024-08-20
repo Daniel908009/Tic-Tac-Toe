@@ -33,5 +33,5 @@ Now open a console and enter the folowing code: pip install -r /path/to/requirem
 *Replace the /path/to/requirements.txt with the actual path. <br>
 Enjoy the game! <br>
 <h1>Screenshots of the game</h1>
-(https://github.com/user-attachments/assets/2d1ad99c-c532-4547-be65-007746456239)
+(https://github.com/user-attachments/assets/2d1ad99c-c532-4547-be65-007746456239) <br>
 (https://github.com/user-attachments/assets/5ff3a882-ceaa-416b-b77a-9f4fe89eb327)
